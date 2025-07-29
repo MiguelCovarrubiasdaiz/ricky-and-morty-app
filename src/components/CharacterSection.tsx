@@ -10,12 +10,14 @@ import CharacterCardSkeleton from './ui/CharacterCardSkeleton'
 interface CharacterSectionProps {
   title: string
   selectedCharacter: Character | null
+  otherSelectedCharacter: Character | null
   onCharacterSelect: (character: Character) => void
 }
 
 export default function CharacterSection({
   title,
   selectedCharacter,
+  otherSelectedCharacter,
   onCharacterSelect,
 }: CharacterSectionProps) {
   const {
@@ -34,7 +36,7 @@ export default function CharacterSection({
   if (error) {
     return (
       <Card>
-        <h2 className="text-xl font-bold mb-4 text-gray-800">
+        <h2 className="text-xl font-bold mb-4 text-rick-green">
           {title}
         </h2>
         <ErrorState
@@ -47,7 +49,7 @@ export default function CharacterSection({
 
   return (
     <Card className="h-fit">
-      <h2 className="text-xl font-bold mb-4 text-gray-800">
+      <h2 className="text-xl font-bold mb-4 text-rick-green">
         {title}
       </h2>
 
@@ -66,6 +68,7 @@ export default function CharacterSection({
         <CharacterGrid
           characters={characters}
           selectedCharacter={selectedCharacter}
+          otherSelectedCharacter={otherSelectedCharacter}
           onCharacterSelect={onCharacterSelect}
         />
       )}

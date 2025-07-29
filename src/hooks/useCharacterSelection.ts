@@ -6,10 +6,18 @@ export function useCharacterSelection() {
   const [character2, setCharacter2] = useState<Character | null>(null)
 
   const selectCharacter1 = (character: Character) => {
+    if (character2 && character2.id === character.id) {
+      alert('Este personaje ya está seleccionado en Character #2')
+      return
+    }
     setCharacter1(character)
   }
 
   const selectCharacter2 = (character: Character) => {
+    if (character1 && character1.id === character.id) {
+      alert('Este personaje ya está seleccionado en Character #1')
+      return
+    }
     setCharacter2(character)
   }
 

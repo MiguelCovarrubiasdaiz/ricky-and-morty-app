@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .glow-text {
+    text-shadow: 0 0 10px #87F54E, 0 0 20px #87F54E, 0 0 30px #87F54E;
+  }
+  
+  .portal-glow {
+    box-shadow: 
+      0 0 20px rgba(0, 198, 251, 0.3),
+      0 0 40px rgba(0, 198, 251, 0.2),
+      inset 0 0 20px rgba(0, 198, 251, 0.1);
+  }
+  
+  .character-hover {
+    transition: all 0.3s ease;
+  }
+  
+  .character-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 10px 25px rgba(135, 245, 78, 0.2),
+      0 0 20px rgba(135, 245, 78, 0.1);
+  }
+  
+  .selected-character {
+    box-shadow: 
+      0 0 20px rgba(135, 245, 78, 0.4),
+      0 0 40px rgba(135, 245, 78, 0.3),
+      inset 0 0 10px rgba(135, 245, 78, 0.1);
+    border-color: #87F54E;
+  }
+}

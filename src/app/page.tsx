@@ -23,8 +23,9 @@ export default function Home() {
   } = useEpisodeFilters(character1, character2)
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div>
+    <div className="min-h-screen bg-space-dark bg-stars bg-cover bg-center bg-fixed relative overflow-hidden">
+      <div className="absolute inset-0 bg-space"></div>
+      <div className="relative z-10">
         <div className="container mx-auto px-4 py-6 max-w-7xl">
           <PageHeader
             title="Rick & Morty Explorer"
@@ -36,6 +37,7 @@ export default function Home() {
               <CharacterSection
                 title="Character #1"
                 selectedCharacter={character1}
+                otherSelectedCharacter={character2}
                 onCharacterSelect={selectCharacter1}
               />
             </div>
@@ -43,6 +45,7 @@ export default function Home() {
               <CharacterSection
                 title="Character #2"
                 selectedCharacter={character2}
+                otherSelectedCharacter={character1}
                 onCharacterSelect={selectCharacter2}
               />
             </div>

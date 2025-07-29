@@ -43,7 +43,8 @@ export const getMultipleEpisodes = async (
 
 export const extractIdFromUrl = (url: string): number => {
   const id = url.split('/').pop()
-  return parseInt(id || '0', 10)
+  const parsedId = parseInt(id || '0', 10)
+  return isNaN(parsedId) ? 0 : parsedId
 }
 
 export const getEpisodesForCharacter = async (

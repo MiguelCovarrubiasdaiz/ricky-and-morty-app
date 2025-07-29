@@ -21,7 +21,7 @@ export default function Pagination({
   loading = false,
 }: PaginationProps) {
   return (
-    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+    <div className="flex items-center justify-between pt-4 border-t border-rick-green/30">
       <Button
         onClick={onPrevious}
         disabled={!canGoPrevious || loading}
@@ -34,11 +34,11 @@ export default function Pagination({
       </Button>
 
       <div className="flex items-center space-x-2">
-        <span className="text-sm text-gray-500">Page</span>
-        <span className="text-sm font-medium text-gray-900 bg-gray-100 px-2 py-1 rounded">
+        <span className="text-sm text-gray-300">Page</span>
+        <span className="text-sm font-medium text-rick-green bg-rick-green/10 border border-rick-green/30 px-2 py-1 rounded">
           {currentPage}
         </span>
-        <span className="text-sm text-gray-500">of {totalPages}</span>
+        <span className="text-sm text-gray-300">of {totalPages}</span>
       </div>
 
       <Button

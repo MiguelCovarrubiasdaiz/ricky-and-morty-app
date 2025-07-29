@@ -13,6 +13,7 @@ export function useCustomPagination() {
   const [error, setError] = useState<string | null>(null)
   const [apiPage, setApiPage] = useState(1)
   const [apiTotalPages, setApiTotalPages] = useState(1)
+  const [totalCharactersCount, setTotalCharactersCount] = useState(0)
 
   const fetchCharacters = async (page: number) => {
     try {
@@ -27,6 +28,7 @@ export function useCustomPagination() {
       }
       
       setApiTotalPages(response.info.pages)
+      setTotalCharactersCount(response.info.count)
     } catch (err) {
       setError('Failed to fetch characters')
       console.error('Error fetching characters:', err)
@@ -45,7 +47,11 @@ export function useCustomPagination() {
     const displayed = allCharacters.slice(startIndex, endIndex)
     
     setDisplayedCharacters(displayed)
-    setTotalPages(Math.ceil(allCharacters.length / ITEMS_PER_PAGE))
+    // Usar el total de personajes de la API para calcular páginas correctas
+    const calculatedTotalPages = totalCharactersCount > 0 
+      ? Math.ceil(totalCharactersCount / ITEMS_PER_PAGE)
+      : Math.ceil(allCharacters.length / ITEMS_PER_PAGE)
+    setTotalPages(calculatedTotalPages)
 
     // Si necesitamos más personajes y no hemos cargado todas las páginas de la API
     if (endIndex >= allCharacters.length && apiPage < apiTotalPages && !loading) {
@@ -53,7 +59,7 @@ export function useCustomPagination() {
       setApiPage(nextApiPage)
       fetchCharacters(nextApiPage)
     }
-  }, [currentPage, allCharacters, apiPage, apiTotalPages, loading])
+  }, [currentPage, allCharacters, apiPage, apiTotalPages, loading, totalCharactersCount])
 
   const goToNextPage = () => {
     if (currentPage < totalPages) {

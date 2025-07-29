@@ -23,7 +23,7 @@ export default function EpisodeSection({
   if (loading) {
     return (
       <Card>
-        <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
+        <h3 className="text-xl font-bold mb-4 text-rick-green">{title}</h3>
         <div className="flex items-center justify-center py-8">
           <LoadingSpinner />
         </div>
@@ -33,8 +33,8 @@ export default function EpisodeSection({
 
   return (
     <Card>
-      <h3 className="text-xl font-bold mb-4 text-gray-800">{title}</h3>
-      <div className="mb-2 text-sm text-gray-600">
+      <h3 className="text-xl font-bold mb-4 text-rick-green">{title}</h3>
+      <div className="mb-2 text-sm text-gray-300">
         {sortedEpisodes.length} episode{sortedEpisodes.length !== 1 ? 's' : ''}
       </div>
 

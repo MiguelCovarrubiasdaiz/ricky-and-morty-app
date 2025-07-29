@@ -1,10 +1,10 @@
 export default function EpisodeAnalysisHeader() {
   return (
     <div className="text-center">
-      <h2 className="text-xl font-bold text-gray-900 mb-1">
+      <h2 className="text-xl font-bold text-rick-green mb-1 glow-text">
         Episode Analysis
       </h2>
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-gray-300">
         Discover which episodes feature your selected characters
       </p>
     </div>
