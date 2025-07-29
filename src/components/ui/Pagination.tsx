@@ -30,7 +30,7 @@ export default function Pagination({
         Previous
       </Button>
 
-      <span className="text-gray-600 font-medium">
+      <span className="text-gray-600 font-medium select-none">
         Page {currentPage} of {totalPages}
       </span>
 

@@ -1,5 +1,5 @@
 import { Character } from '@/types/api'
-import { useCharacters } from '@/hooks/useCharacters'
+import { useCustomPagination } from '@/hooks/useCustomPagination'
 import Card from './ui/Card'
 import LoadingSpinner from './ui/LoadingSpinner'
 import ErrorState from './ui/ErrorState'
@@ -29,7 +29,7 @@ export default function CharacterSection({
     retryFetch,
     canGoNext,
     canGoPrevious,
-  } = useCharacters()
+  } = useCustomPagination()
 
   if (loading) {
     return (

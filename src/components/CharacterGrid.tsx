@@ -13,7 +13,7 @@ export default function CharacterGrid({
   onCharacterSelect,
 }: CharacterGridProps) {
   return (
-    <div className="grid grid-cols-2  lg:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-1  lg:grid-cols-2 gap-3 mb-6 ">
       {characters.map((character) => (
         <CharacterCard
           key={character.id}

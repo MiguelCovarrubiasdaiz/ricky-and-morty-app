@@ -6,7 +6,7 @@ interface EpisodeCardProps {
 
 export default function EpisodeCard({ episode }: EpisodeCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-4 border border-gray-200">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-4 border border-gray-200 select-none">
       <div className="flex items-start justify-between mb-2">
         <h3 className="font-semibold text-gray-800 text-sm leading-tight">
           {episode.name}
