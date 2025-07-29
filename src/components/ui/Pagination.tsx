@@ -1,3 +1,4 @@
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2'
 import Button from './Button'
 
 interface PaginationProps {
@@ -20,27 +21,35 @@ export default function Pagination({
   loading = false,
 }: PaginationProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
       <Button
         onClick={onPrevious}
         disabled={!canGoPrevious || loading}
-        variant={canGoPrevious ? 'primary' : 'ghost'}
-        size="md"
+        variant={canGoPrevious ? 'secondary' : 'ghost'}
+        size="sm"
+        className="flex items-center space-x-1"
       >
-        Previous
+        <HiChevronLeft className="w-4 h-4" />
+        <span>Previous</span>
       </Button>
 
-      <span className="text-gray-600 font-medium select-none">
-        Page {currentPage} of {totalPages}
-      </span>
+      <div className="flex items-center space-x-2">
+        <span className="text-sm text-gray-500">Page</span>
+        <span className="text-sm font-medium text-gray-900 bg-gray-100 px-2 py-1 rounded">
+          {currentPage}
+        </span>
+        <span className="text-sm text-gray-500">of {totalPages}</span>
+      </div>
 
       <Button
         onClick={onNext}
         disabled={!canGoNext || loading}
-        variant={canGoNext ? 'primary' : 'ghost'}
-        size="md"
+        variant={canGoNext ? 'secondary' : 'ghost'}
+        size="sm"
+        className="flex items-center space-x-1"
       >
-        Next
+        <span>Next</span>
+        <HiChevronRight className="w-4 h-4" />
       </Button>
     </div>
   )

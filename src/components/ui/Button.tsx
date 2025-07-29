@@ -19,10 +19,10 @@ export default function Button({
   const baseClasses = 'font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 select-none'
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 focus:ring-blue-500 disabled:from-blue-300 disabled:to-cyan-300 shadow-lg hover:shadow-xl',
-    secondary: 'bg-gradient-to-r from-gray-600 to-gray-700 text-white hover:from-gray-700 hover:to-gray-800 focus:ring-gray-500 disabled:from-gray-300 disabled:to-gray-400 shadow-lg hover:shadow-xl',
-    danger: 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-500 disabled:from-red-300 disabled:to-red-400 shadow-lg hover:shadow-xl',
-    ghost: 'bg-white/10 backdrop-blur-sm text-gray-700 hover:bg-white/20 focus:ring-gray-500 disabled:text-gray-400 border border-white/20',
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 disabled:bg-blue-300 shadow-sm',
+    secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 disabled:bg-gray-300 shadow-sm',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-red-300 shadow-sm',
+    ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-500 disabled:text-gray-400 border border-gray-300',
   }
 
   const sizeClasses = {

@@ -1,11 +1,11 @@
 import { Character } from '@/types/api'
 import { useCustomPagination } from '@/hooks/useCustomPagination'
 import Card from './ui/Card'
-import LoadingSpinner from './ui/LoadingSpinner'
 import ErrorState from './ui/ErrorState'
 import Pagination from './ui/Pagination'
 import SelectedCharacterBadge from './SelectedCharacterBadge'
 import CharacterGrid from './CharacterGrid'
+import CharacterCardSkeleton from './ui/CharacterCardSkeleton'
 
 interface CharacterSectionProps {
   title: string
@@ -31,23 +31,10 @@ export default function CharacterSection({
     canGoPrevious,
   } = useCustomPagination()
 
-  if (loading) {
-    return (
-      <Card>
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          {title}
-        </h2>
-        <div className="flex items-center justify-center py-12">
-          <LoadingSpinner size="lg" />
-        </div>
-      </Card>
-    )
-  }
-
   if (error) {
     return (
       <Card>
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+        <h2 className="text-xl font-bold mb-4 text-gray-800">
           {title}
         </h2>
         <ErrorState
@@ -59,20 +46,29 @@ export default function CharacterSection({
   }
 
   return (
-    <Card>
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+    <Card className="h-fit">
+      <h2 className="text-xl font-bold mb-4 text-gray-800">
         {title}
       </h2>
 
-      {selectedCharacter && (
-        <SelectedCharacterBadge character={selectedCharacter} />
-      )}
-
-      <CharacterGrid
-        characters={characters}
-        selectedCharacter={selectedCharacter}
-        onCharacterSelect={onCharacterSelect}
+      <SelectedCharacterBadge 
+        character={selectedCharacter} 
+        placeholder="None selected"
       />
+
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <CharacterCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : (
+        <CharacterGrid
+          characters={characters}
+          selectedCharacter={selectedCharacter}
+          onCharacterSelect={onCharacterSelect}
+        />
+      )}
 
       <Pagination
         currentPage={currentPage}

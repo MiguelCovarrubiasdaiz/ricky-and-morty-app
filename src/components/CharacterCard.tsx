@@ -1,5 +1,6 @@
 import { Character } from '@/types/api'
 import Image from 'next/image'
+import { HiMapPin } from 'react-icons/hi2'
 
 interface CharacterCardProps {
   character: Character
@@ -25,11 +26,11 @@ export default function CharacterCard({
 }: CharacterCardProps) {
   return (
     <div
-      className={`relative p-3 rounded-xl shadow-lg cursor-pointer transition-colors duration-150 select-none ${
+      className={`relative p-4 rounded-lg cursor-pointer transition-colors duration-150 select-none border ${
         isSelected
-          ? 'ring-3 ring-blue-500 bg-gradient-to-r from-blue-50 to-cyan-50 shadow-blue-200'
-          : 'bg-white/95 backdrop-blur-sm hover:bg-white border border-white/20'
-      }`}
+          ? 'ring-2 ring-blue-500 bg-blue-50 border-blue-200'
+          : 'bg-white hover:bg-gray-50 border-gray-200 hover:border-gray-300'
+      } shadow-sm hover:shadow-md`}
       onClick={onClick}
     >
       <div className="flex items-center space-x-3">
@@ -72,9 +73,10 @@ export default function CharacterCard({
             </div>
             
             {character.location.name !== 'unknown' && character.location.name.length < 25 && (
-              <p className="text-xs text-gray-500 truncate">
-                📍 {character.location.name}
-              </p>
+              <div className="flex items-center space-x-1 text-xs text-gray-500">
+                <HiMapPin className="w-3 h-3 flex-shrink-0" />
+                <span className="truncate">{character.location.name}</span>
+              </div>
             )}
           </div>
         </div>

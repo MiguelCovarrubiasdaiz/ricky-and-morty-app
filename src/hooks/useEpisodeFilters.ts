@@ -13,8 +13,8 @@ export function useEpisodeFilters(character1: Character | null, character2: Char
 
   useEffect(() => {
     const updateEpisodes = async () => {
-      // Solo procesar episodios cuando ambos personajes estén seleccionados
-      if (!character1 || !character2) {
+      // Procesar episodios cuando al menos un personaje esté seleccionado
+      if (!character1 && !character2) {
         setEpisodeFilters({
           character1Only: [],
           sharedEpisodes: [],
