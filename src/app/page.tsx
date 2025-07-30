@@ -6,8 +6,7 @@ import PageHeader from '@/components/PageHeader';
 import CharacterSection from '@/components/CharacterSection';
 import EpisodeSection from '@/components/EpisodeSection';
 import WelcomeMessage from '@/components/WelcomeMessage';
-import Button from '@/components/ui/Button';
-import { FaExchangeAlt } from 'react-icons/fa';
+import CharacterComparison from '@/components/CharacterComparison';
 
 export default function Home() {
   const {
@@ -17,6 +16,8 @@ export default function Home() {
     selectCharacter2,
     clearAllCharacters,
     hasBothCharacters,
+    showEpisodes,
+    shouldRenderEpisodes,
   } = useCharacterSelection();
 
   const { episodeFilters, loading: loadingEpisodes } = useEpisodeFilters(character1, character2);
@@ -31,8 +32,15 @@ export default function Home() {
             title="Rick & Morty Explorer"
             subtitle="Explore characters and their episodes from the multiverse"
           />
-          {!(character1 && character2) && <WelcomeMessage />}
-          {!hasBothCharacters ? (
+          {!(character1 || character2) && <WelcomeMessage />}
+
+          <CharacterComparison
+            character1={character1}
+            character2={character2}
+            onClearSelection={clearAllCharacters}
+          />
+
+          {!hasBothCharacters && (
             <div id="characters-section" className="mb-8 grid grid-cols-1 gap-4 xl:grid-cols-2">
               <div className="space-y-6">
                 <CharacterSection
@@ -51,85 +59,89 @@ export default function Home() {
                 />
               </div>
             </div>
-          ) : (
-            <div className="mb-8">
-              <div className="rounded-lg border border-rick-green bg-gray-800/50 p-6 backdrop-blur-sm">
-                <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-                  <div className="flex flex-col items-center gap-6 sm:flex-row">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={character1?.image}
-                        alt={character1?.name}
-                        className="h-16 w-16 rounded-full border-2 border-blue-400"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-white">{character1?.name}</h3>
-                        <p className="text-sm text-gray-400">{character1?.species}</p>
-                      </div>
-                    </div>
-
-                    <div className="text-xl font-bold text-gray-400">VS</div>
-
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={character2?.image}
-                        alt={character2?.name}
-                        className="h-16 w-16 rounded-full border-2 border-green-400"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-white">{character2?.name}</h3>
-                        <p className="text-sm text-gray-400">{character2?.species}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <Button variant="scroll" size="sm" onClick={clearAllCharacters} className="mb-4">
-                    <FaExchangeAlt className="h-4 w-4  transition-transform duration-200 group-hover:translate-y-1" />
-                    <span>Select Other Characters</span>
-                  </Button>
-                </div>
-              </div>
-            </div>
           )}
 
-          {character1 && character2 && (
-            <div className="space-y-8">
+          {shouldRenderEpisodes && (
+            <div
+              className={`
+                mb-8 transform space-y-8 transition-all duration-700 ease-out
+                ${
+                  showEpisodes
+                    ? 'translate-y-0 scale-100 opacity-100'
+                    : 'translate-y-6 scale-95 opacity-0'
+                }
+              `}
+            >
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                <EpisodeSection
-                  title={character1 ? `${character1.name} Episodes` : 'Character #1 Episodes'}
-                  episodes={episodeFilters.character1Only}
-                  loading={loadingEpisodes}
-                  emptyMessage={
-                    character1
-                      ? character2
-                        ? `${character1.name} has no unique episodes`
-                        : `${character1.name} has no episodes`
-                      : 'Select Character #1 to see episodes'
-                  }
-                />
+                <div
+                  className={`
+                    duration-600 transform transition-all ease-out
+                    ${
+                      showEpisodes
+                        ? 'translate-x-0 opacity-100 delay-100'
+                        : '-translate-x-8 opacity-0 delay-100'
+                    }
+                  `}
+                >
+                  <EpisodeSection
+                    title={character1 ? `${character1.name} Episodes` : 'Character #1 Episodes'}
+                    episodes={episodeFilters.character1Only}
+                    loading={loadingEpisodes}
+                    emptyMessage={
+                      character1
+                        ? character2
+                          ? `${character1.name} has no unique episodes`
+                          : `${character1.name} has no episodes`
+                        : 'Select Character #1 to see episodes'
+                    }
+                  />
+                </div>
 
-                <EpisodeSection
-                  title="Shared Episodes"
-                  episodes={episodeFilters.sharedEpisodes}
-                  loading={loadingEpisodes}
-                  emptyMessage={
-                    character1 && character2
-                      ? `${character1.name} and ${character2.name} share no episodes`
-                      : 'Select both characters to see shared episodes'
-                  }
-                />
+                <div
+                  className={`
+                    duration-600 transform transition-all ease-out
+                    ${
+                      showEpisodes
+                        ? 'delay-350 translate-y-0 opacity-100'
+                        : 'delay-350 translate-y-6 opacity-0'
+                    }
+                  `}
+                >
+                  <EpisodeSection
+                    title="Shared Episodes"
+                    episodes={episodeFilters.sharedEpisodes}
+                    loading={loadingEpisodes}
+                    emptyMessage={
+                      character1 && character2
+                        ? `${character1.name} and ${character2.name} share no episodes`
+                        : 'Select both characters to see shared episodes'
+                    }
+                  />
+                </div>
 
-                <EpisodeSection
-                  title={character2 ? `${character2.name} Episodes` : 'Character #2 Episodes'}
-                  episodes={episodeFilters.character2Only}
-                  loading={loadingEpisodes}
-                  emptyMessage={
-                    character2
-                      ? character1
-                        ? `${character2.name} has no unique episodes`
-                        : `${character2.name} has no episodes`
-                      : 'Select Character #2 to see episodes'
-                  }
-                />
+                <div
+                  className={`
+                    duration-600 transform transition-all ease-out
+                    ${
+                      showEpisodes
+                        ? 'translate-x-0 opacity-100 delay-100'
+                        : 'translate-x-8 opacity-0 delay-100'
+                    }
+                  `}
+                >
+                  <EpisodeSection
+                    title={character2 ? `${character2.name} Episodes` : 'Character #2 Episodes'}
+                    episodes={episodeFilters.character2Only}
+                    loading={loadingEpisodes}
+                    emptyMessage={
+                      character2
+                        ? character1
+                          ? `${character2.name} has no unique episodes`
+                          : `${character2.name} has no episodes`
+                        : 'Select Character #2 to see episodes'
+                    }
+                  />
+                </div>
               </div>
             </div>
           )}

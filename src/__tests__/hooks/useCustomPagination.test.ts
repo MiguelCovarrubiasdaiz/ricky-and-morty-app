@@ -1,12 +1,13 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useCustomPagination } from '@/hooks/useCustomPagination';
 import * as api from '@/services/api';
+import { CharacterResponse } from '@/types/api';
 
 jest.mock('../../services/api');
 const mockGetCharacters = api.getCharacters as jest.MockedFunction<typeof api.getCharacters>;
 
 describe('useCustomPagination', () => {
-  const mockApiResponse = {
+  const mockApiResponse: CharacterResponse = {
     info: {
       count: 826,
       pages: 42,
@@ -41,18 +42,6 @@ describe('useCustomPagination', () => {
     expect(result.current.characters).toEqual([]);
     expect(result.current.currentPage).toBe(1);
     expect(result.current.error).toBeNull();
-  });
-
-  it('should load initial characters', async () => {
-    const { result } = renderHook(() => useCustomPagination());
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(mockGetCharacters).toHaveBeenCalledWith(1);
-    expect(result.current.characters).toHaveLength(12);
-    expect(result.current.totalPages).toBeGreaterThan(1);
   });
 
   it('should handle API errors', async () => {
@@ -175,10 +164,10 @@ describe('useCustomPagination', () => {
       results: Array.from({ length: 5 }, (_, i) => ({
         id: i + 1,
         name: `Character ${i + 1}`,
-        status: 'Alive',
+        status: 'Alive' as const,
         species: 'Human',
         type: '',
-        gender: 'Male',
+        gender: 'Male' as const,
         origin: { name: 'Earth', url: '' },
         location: { name: 'Earth', url: '' },
         image: '',
@@ -221,5 +210,75 @@ describe('useCustomPagination', () => {
     // Default should be 12 items per page based on the constant
     expect(result.current.characters).toHaveLength(12);
     expect(result.current.totalPages).toBeGreaterThan(1);
+  });
+
+  it('should automatically fetch more data when reaching end of current characters', async () => {
+    // Create a large mock response that will trigger automatic loading
+    const largeApiResponse = {
+      info: {
+        count: 1000,
+        pages: 50,
+        next: 'https://rickandmortyapi.com/api/character?page=2',
+        prev: null,
+      },
+      results: Array.from({ length: 20 }, (_, i) => ({
+        id: i + 1,
+        name: `Character ${i + 1}`,
+        status: 'Alive' as const,
+        species: 'Human',
+        type: '',
+        gender: 'Male' as const,
+        origin: { name: 'Earth', url: '' },
+        location: { name: 'Earth', url: '' },
+        image: '',
+        episode: [],
+        url: '',
+        created: '',
+      })),
+    };
+
+    const secondPageResponse = {
+      info: {
+        count: 1000,
+        pages: 50,
+        next: 'https://rickandmortyapi.com/api/character?page=3',
+        prev: 'https://rickandmortyapi.com/api/character?page=1',
+      },
+      results: Array.from({ length: 20 }, (_, i) => ({
+        id: i + 21,
+        name: `Character ${i + 21}`,
+        status: 'Alive' as const,
+        species: 'Human',
+        type: '',
+        gender: 'Male' as const,
+        origin: { name: 'Earth', url: '' },
+        location: { name: 'Earth', url: '' },
+        image: '',
+        episode: [],
+        url: '',
+        created: '',
+      })),
+    };
+
+    mockGetCharacters.mockResolvedValueOnce(largeApiResponse);
+    mockGetCharacters.mockResolvedValueOnce(secondPageResponse);
+
+    const { result } = renderHook(() => useCustomPagination());
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    // Navigate to page 2 (items 13-24), which should trigger automatic fetch
+    act(() => {
+      result.current.goToNextPage();
+    });
+
+    // Wait for the automatic fetch to complete
+    await waitFor(() => {
+      expect(mockGetCharacters).toHaveBeenCalledWith(2);
+    });
+
+    expect(mockGetCharacters).toHaveBeenCalledTimes(2);
   });
 });
