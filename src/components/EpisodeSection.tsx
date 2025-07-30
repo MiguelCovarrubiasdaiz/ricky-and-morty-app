@@ -1,16 +1,9 @@
-import { Episode } from '@/types/api'
-import { sortEpisodesByNumber } from '@/utils/episodeFilters'
-import Card from './ui/Card'
-import LoadingSpinner from './ui/LoadingSpinner'
-import EmptyState from './ui/EmptyState'
-import EpisodeGrid from './EpisodeGrid'
-
-interface EpisodeSectionProps {
-  title: string
-  episodes: Episode[]
-  loading?: boolean
-  emptyMessage?: string
-}
+import { sortEpisodesByNumber } from '@/utils/episodeFilters';
+import Card from './ui/Card';
+import LoadingSpinner from './ui/LoadingSpinner';
+import EmptyState from './ui/EmptyState';
+import EpisodeGrid from './EpisodeGrid';
+import { EpisodeSectionProps } from '@/types/components';
 
 export default function EpisodeSection({
   title,
@@ -18,22 +11,22 @@ export default function EpisodeSection({
   loading = false,
   emptyMessage = 'No episodes found',
 }: EpisodeSectionProps) {
-  const sortedEpisodes = sortEpisodesByNumber(episodes)
+  const sortedEpisodes = sortEpisodesByNumber(episodes);
 
   if (loading) {
     return (
       <Card>
-        <h3 className="text-xl font-bold mb-4 text-rick-green">{title}</h3>
+        <h3 className="mb-4 text-xl font-bold text-rick-green">{title}</h3>
         <div className="flex items-center justify-center py-8">
           <LoadingSpinner />
         </div>
       </Card>
-    )
+    );
   }
 
   return (
     <Card>
-      <h3 className="text-xl font-bold mb-4 text-rick-green">{title}</h3>
+      <h3 className="mb-4 text-xl font-bold text-rick-green">{title}</h3>
       <div className="mb-2 text-sm text-gray-300">
         {sortedEpisodes.length} episode{sortedEpisodes.length !== 1 ? 's' : ''}
       </div>
@@ -44,5 +37,5 @@ export default function EpisodeSection({
         <EpisodeGrid episodes={sortedEpisodes} />
       )}
     </Card>
-  )
+  );
 }

@@ -71,7 +71,6 @@ const eslintConfig = [
     },
   },
 
-  // Ignora ciertos archivos y directorios
   {
     ignores: ['node_modules/**', '.next/**', 'build/**', 'dist/**', 'public/**', 'cache/**'],
   },

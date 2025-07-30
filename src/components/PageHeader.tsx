@@ -1,17 +1,10 @@
-interface PageHeaderProps {
-  title: string
-  subtitle: string
-}
+import { PageHeaderProps } from '@/types/components';
 
 export default function PageHeader({ title, subtitle }: PageHeaderProps) {
   return (
-    <header className="text-center mb-8">
-      <h1 className="text-3xl font-bold text-rick-green mb-2 tracking-wider glow-text">
-        {title}
-      </h1>
-      <p className="text-sm text-gray-300 max-w-2xl mx-auto">
-        {subtitle}
-      </p>
+    <header className="mb-8 text-center">
+      <h1 className="glow-text mb-2 text-3xl font-bold tracking-wider text-rick-green">{title}</h1>
+      <p className="mx-auto max-w-2xl text-sm text-gray-300">{subtitle}</p>
     </header>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react'
-import SelectedCharacterBadge from '@/components/SelectedCharacterBadge'
-import { Character } from '@/types/api'
+import { render, screen } from '@testing-library/react';
+import SelectedCharacterBadge from '@/components/SelectedCharacterBadge';
+import { Character } from '@/types/api';
 
 describe('SelectedCharacterBadge Component', () => {
   const mockCharacter: Character = {
@@ -15,20 +15,20 @@ describe('SelectedCharacterBadge Component', () => {
     image: '',
     episode: [],
     url: '',
-    created: ''
-  }
+    created: '',
+  };
 
   it('renders selected character name', () => {
-    render(<SelectedCharacterBadge character={mockCharacter} placeholder="None selected" />)
-    
-    expect(screen.getByText('Selected:')).toBeInTheDocument()
-    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument()
-  })
+    render(<SelectedCharacterBadge character={mockCharacter} placeholder="None selected" />);
+
+    expect(screen.getByText('Selected:')).toBeInTheDocument();
+    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
+  });
 
   it('renders placeholder when no character', () => {
-    render(<SelectedCharacterBadge character={null} placeholder="None selected" />)
-    
-    expect(screen.getByText('Selected:')).toBeInTheDocument()
-    expect(screen.getByText('None selected')).toBeInTheDocument()
-  })
-})
+    render(<SelectedCharacterBadge character={null} placeholder="None selected" />);
+
+    expect(screen.getByText('Selected:')).toBeInTheDocument();
+    expect(screen.getByText('None selected')).toBeInTheDocument();
+  });
+});

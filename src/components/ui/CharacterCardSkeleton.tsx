@@ -1,28 +1,23 @@
 export default function CharacterCardSkeleton() {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 animate-pulse">
+    <div className="animate-pulse rounded-lg border   p-4">
       <div className="flex items-center space-x-3">
-        {/* Image skeleton */}
-        <div className="w-[60px] h-[60px] bg-gray-200 rounded-lg flex-shrink-0"></div>
-        
-        {/* Content skeleton */}
-        <div className="flex-1 min-w-0">
-          {/* Name skeleton */}
-          <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-          
-          {/* Status and species skeleton */}
-          <div className="flex items-center space-x-2 mb-1">
-            <div className="h-6 bg-gray-200 rounded-full w-16"></div>
-            <div className="h-3 bg-gray-200 rounded w-20"></div>
+        <div className="h-[60px] w-[60px] flex-shrink-0 rounded-lg bg-gray-200"></div>
+
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 h-4 w-3/4 rounded bg-gray-200"></div>
+
+          <div className="mb-1 flex items-center space-x-2">
+            <div className="h-6 w-16 rounded-full bg-gray-200"></div>
+            <div className="h-3 w-20 rounded bg-gray-200"></div>
           </div>
-          
-          {/* Location skeleton */}
+
           <div className="flex items-center space-x-1">
-            <div className="w-3 h-3 bg-gray-200 rounded"></div>
-            <div className="h-3 bg-gray-200 rounded w-24"></div>
+            <div className="h-3 w-3 rounded bg-gray-200"></div>
+            <div className="h-3 w-24 rounded bg-gray-200"></div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

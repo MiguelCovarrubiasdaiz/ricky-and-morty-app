@@ -1,15 +1,6 @@
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2'
-import Button from './Button'
-
-interface PaginationProps {
-  currentPage: number
-  totalPages: number
-  onPrevious: () => void
-  onNext: () => void
-  canGoPrevious: boolean
-  canGoNext: boolean
-  loading?: boolean
-}
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
+import Button from './Button';
+import { PaginationProps } from '@/types/ui';
 
 export default function Pagination({
   currentPage,
@@ -21,7 +12,7 @@ export default function Pagination({
   loading = false,
 }: PaginationProps) {
   return (
-    <div className="flex items-center justify-between pt-4 border-t border-rick-green/30">
+    <div className="flex items-center justify-between border-t border-rick-green/30 pt-4">
       <Button
         onClick={onPrevious}
         disabled={!canGoPrevious || loading}
@@ -29,13 +20,13 @@ export default function Pagination({
         size="sm"
         className="flex items-center space-x-1"
       >
-        <HiChevronLeft className="w-4 h-4" />
+        <HiChevronLeft className="h-4 w-4" />
         <span>Previous</span>
       </Button>
 
       <div className="flex items-center space-x-2">
         <span className="text-sm text-gray-300">Page</span>
-        <span className="text-sm font-medium text-rick-green bg-rick-green/10 border border-rick-green/30 px-2 py-1 rounded">
+        <span className="rounded border border-rick-green/30 bg-rick-green/10 px-2 py-1 text-sm font-medium text-rick-green">
           {currentPage}
         </span>
         <span className="text-sm text-gray-300">of {totalPages}</span>
@@ -49,8 +40,8 @@ export default function Pagination({
         className="flex items-center space-x-1"
       >
         <span>Next</span>
-        <HiChevronRight className="w-4 h-4" />
+        <HiChevronRight className="h-4 w-4" />
       </Button>
     </div>
-  )
+  );
 }

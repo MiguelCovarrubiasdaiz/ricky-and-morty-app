@@ -1,12 +1,5 @@
-import { Character } from '@/types/api'
-import CharacterCard from './CharacterCard'
-
-interface CharacterGridProps {
-  characters: Character[]
-  selectedCharacter: Character | null
-  otherSelectedCharacter: Character | null
-  onCharacterSelect: (character: Character) => void
-}
+import CharacterCard from './CharacterCard';
+import { CharacterGridProps } from '@/types/components';
 
 export default function CharacterGrid({
   characters,
@@ -15,9 +8,9 @@ export default function CharacterGrid({
   onCharacterSelect,
 }: CharacterGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+    <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
       {characters.map((character) => {
-        const isDisabled = otherSelectedCharacter?.id === character.id
+        const isDisabled = otherSelectedCharacter?.id === character.id;
         return (
           <CharacterCard
             key={character.id}
@@ -26,8 +19,8 @@ export default function CharacterGrid({
             isDisabled={isDisabled}
             onClick={() => onCharacterSelect(character)}
           />
-        )
+        );
       })}
     </div>
-  )
+  );
 }

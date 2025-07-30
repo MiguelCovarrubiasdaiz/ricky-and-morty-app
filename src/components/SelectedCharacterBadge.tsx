@@ -1,16 +1,17 @@
-import { Character } from '@/types/api'
+import { SelectedCharacterBadgeProps } from '@/types/components';
 
-interface SelectedCharacterBadgeProps {
-  character: Character | null
-  placeholder: string
-}
-
-export default function SelectedCharacterBadge({ character, placeholder }: SelectedCharacterBadgeProps) {
+export default function SelectedCharacterBadge({
+  character,
+  placeholder,
+}: SelectedCharacterBadgeProps) {
   return (
-    <div className="mb-4 p-3 bg-gray-800/30 rounded-lg border border-rick-green/20">
+    <div className="mb-4 rounded-lg border border-rick-green/20 bg-gray-800/30 p-3">
       <p className="text-sm font-medium text-gray-200">
-        Selected: <span className={character ? "text-rick-green" : "text-gray-400"}>{character ? character.name : placeholder}</span>
+        Selected:{' '}
+        <span className={character ? 'text-rick-green' : 'text-gray-400'}>
+          {character ? character.name : placeholder}
+        </span>
       </p>
     </div>
-  )
+  );
 }
