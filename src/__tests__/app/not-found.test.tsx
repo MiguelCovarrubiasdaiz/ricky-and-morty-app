@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import NotFound from '@/app/not-found';
 
 jest.mock('next/link', () => {
@@ -44,7 +44,9 @@ describe('NotFound', () => {
     const mainContainer = container.querySelector('.transform');
     expect(mainContainer).toHaveClass('translate-y-8', 'scale-95', 'opacity-0');
 
-    jest.advanceTimersByTime(100);
+    await act(async () => {
+      jest.advanceTimersByTime(100);
+    });
 
     await waitFor(() => {
       expect(mainContainer).toHaveClass('translate-y-0', 'scale-100', 'opacity-100');

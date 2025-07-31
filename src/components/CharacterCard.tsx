@@ -39,7 +39,6 @@ export default function CharacterCard({
             width={60}
             height={60}
             className="rounded-lg object-cover"
-            priority={false}
           />
           <div
             className={`absolute -right-1 -top-1 h-4 w-4 rounded-full ${getStatusColor(character.status)} border-2 border-white shadow-sm`}
