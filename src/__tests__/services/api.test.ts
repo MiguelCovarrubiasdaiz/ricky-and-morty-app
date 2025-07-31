@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   getCharacters,
   getCharacterById,
@@ -7,29 +6,30 @@ import {
   extractIdFromUrl,
 } from '@/services/api';
 import { Character, Episode } from '@/types/api';
+import httpClient from '../../services/httpClient';
 
-jest.mock('axios', () => {
-  const mockAxiosInstance = {
+jest.mock('../../services/httpClient', () => ({
+  __esModule: true,
+  default: {
     get: jest.fn(),
     post: jest.fn(),
     put: jest.fn(),
+    patch: jest.fn(),
     delete: jest.fn(),
-  };
+    setAuthToken: jest.fn(),
+    removeAuthToken: jest.fn(),
+    setHeader: jest.fn(),
+    removeHeader: jest.fn(),
+  },
+}));
 
-  return {
-    create: jest.fn(() => mockAxiosInstance),
-    ...mockAxiosInstance,
-  };
-});
-
-const mockedAxios = axios as jest.Mocked<typeof axios>;
-const mockAxiosInstance = (mockedAxios.create as jest.Mock)();
+const mockHttpClient = httpClient as jest.Mocked<typeof httpClient>;
 
 describe('API Service', () => {
-  describe('API Base URL configuration', () => {
-    it('should create axios instance with timeout configuration', () => {
-      expect(mockAxiosInstance).toBeDefined();
-      expect(mockAxiosInstance.get).toBeDefined();
+  describe('HTTP Client configuration', () => {
+    it('should have HTTP client with required methods', () => {
+      expect(mockHttpClient).toBeDefined();
+      expect(mockHttpClient.get).toBeDefined();
     });
   });
 
@@ -64,46 +64,44 @@ describe('API Service', () => {
     };
 
     it('should fetch characters successfully', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+      mockHttpClient.get.mockResolvedValueOnce(mockApiResponse);
 
       const result = await getCharacters(1);
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character?page=1');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/character?page=1');
       expect(result).toEqual(mockApiResponse);
     });
 
     it('should use default page 1', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+      mockHttpClient.get.mockResolvedValueOnce(mockApiResponse);
 
       await getCharacters();
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character?page=1');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/character?page=1');
     });
 
     it('should include name parameter when provided', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+      mockHttpClient.get.mockResolvedValueOnce(mockApiResponse);
 
       await getCharacters(1, 'Rick');
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character?page=1&name=Rick');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/character?page=1&name=Rick');
     });
 
     it('should include status parameter when provided', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+      mockHttpClient.get.mockResolvedValueOnce(mockApiResponse);
 
       await getCharacters(1, undefined, 'alive');
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character?page=1&status=alive');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/character?page=1&status=alive');
     });
 
     it('should include both name and status parameters when provided', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+      mockHttpClient.get.mockResolvedValueOnce(mockApiResponse);
 
       await getCharacters(2, 'Morty', 'dead');
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
-        '/character?page=2&name=Morty&status=dead'
-      );
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/character?page=2&name=Morty&status=dead');
     });
   });
 
@@ -124,21 +122,21 @@ describe('API Service', () => {
     };
 
     it('should fetch character by ID successfully', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockCharacter });
+      mockHttpClient.get.mockResolvedValueOnce(mockCharacter);
 
       const result = await getCharacterById(1);
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character/1');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/character/1');
       expect(result).toEqual(mockCharacter);
     });
 
     it('should fetch different character by different ID', async () => {
       const mortyCharacter = { ...mockCharacter, id: 2, name: 'Morty Smith' };
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mortyCharacter });
+      mockHttpClient.get.mockResolvedValueOnce(mortyCharacter);
 
       const result = await getCharacterById(2);
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character/2');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/character/2');
       expect(result).toEqual(mortyCharacter);
     });
   });
@@ -183,20 +181,20 @@ describe('API Service', () => {
     });
 
     it('should fetch single episode when only one ID provided', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockEpisodes[0] });
+      mockHttpClient.get.mockResolvedValueOnce(mockEpisodes[0]);
 
       const result = await getMultipleEpisodes([1]);
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/episode/1');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/episode/1');
       expect(result).toEqual([mockEpisodes[0]]);
     });
 
     it('should fetch multiple episodes', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockEpisodes });
+      mockHttpClient.get.mockResolvedValueOnce(mockEpisodes);
 
       const result = await getMultipleEpisodes([1, 2]);
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/episode/1,2');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/episode/1,2');
       expect(result).toEqual(mockEpisodes);
     });
   });
@@ -242,11 +240,11 @@ describe('API Service', () => {
     ];
 
     it('should fetch episodes for character', async () => {
-      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockEpisodes });
+      mockHttpClient.get.mockResolvedValueOnce(mockEpisodes);
 
       const result = await getEpisodesForCharacter(mockCharacter);
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/episode/1,2');
+      expect(mockHttpClient.get).toHaveBeenCalledWith('/episode/1,2');
       expect(result).toEqual(mockEpisodes);
     });
 
@@ -256,7 +254,7 @@ describe('API Service', () => {
       const result = await getEpisodesForCharacter(characterWithNoEpisodes);
 
       expect(result).toEqual([]);
-      expect(mockAxiosInstance.get).not.toHaveBeenCalled();
+      expect(mockHttpClient.get).not.toHaveBeenCalled();
     });
   });
 });

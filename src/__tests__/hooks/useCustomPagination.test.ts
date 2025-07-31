@@ -163,7 +163,6 @@ describe('useCustomPagination', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    // En la página 1: no se puede ir atrás, sí se puede ir adelante
     expect(result.current.canGoPrevious).toBe(false);
     expect(result.current.canGoNext).toBe(true);
 

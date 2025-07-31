@@ -1,12 +1,5 @@
-import axios from 'axios';
 import { Character, Episode, CharacterResponse } from '@/types/api';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://rickandmortyapi.com/api';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-});
+import httpClient from './httpClient';
 
 export const getCharacters = async (
   page: number = 1,
@@ -18,18 +11,15 @@ export const getCharacters = async (
   if (name) params.append('name', name);
   if (status) params.append('status', status);
 
-  const response = await api.get<CharacterResponse>(`/character?${params.toString()}`);
-  return response.data;
+  return await httpClient.get<CharacterResponse>(`/character?${params.toString()}`);
 };
 
 export const getCharacterById = async (id: number): Promise<Character> => {
-  const response = await api.get<Character>(`/character/${id}`);
-  return response.data;
+  return await httpClient.get<Character>(`/character/${id}`);
 };
 
 export const getEpisodeById = async (id: number): Promise<Episode> => {
-  const response = await api.get<Episode>(`/episode/${id}`);
-  return response.data;
+  return await httpClient.get<Episode>(`/episode/${id}`);
 };
 
 export const getMultipleEpisodes = async (ids: number[]): Promise<Episode[]> => {
@@ -38,8 +28,7 @@ export const getMultipleEpisodes = async (ids: number[]): Promise<Episode[]> => 
     const episode = await getEpisodeById(ids[0]);
     return [episode];
   }
-  const response = await api.get<Episode[]>(`/episode/${ids.join(',')}`);
-  return response.data;
+  return await httpClient.get<Episode[]>(`/episode/${ids.join(',')}`);
 };
 
 export const extractIdFromUrl = (url: string): number => {

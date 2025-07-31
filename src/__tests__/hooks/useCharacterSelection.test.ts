@@ -237,7 +237,6 @@ describe('useCharacterSelection', () => {
   it('should reset animation states when clearing individual characters', async () => {
     const { result } = renderHook(() => useCharacterSelection());
 
-    // Select both characters
     act(() => {
       result.current.selectCharacter1(mockCharacter1);
       result.current.selectCharacter2(mockCharacter2);
@@ -248,7 +247,6 @@ describe('useCharacterSelection', () => {
       expect(result.current.shouldRenderEpisodes).toBe(true);
     });
 
-    // Clear just character1
     act(() => {
       result.current.clearCharacter1();
     });
@@ -267,13 +265,11 @@ describe('useCharacterSelection', () => {
   it('should handle rapid character selection changes', async () => {
     const { result } = renderHook(() => useCharacterSelection());
 
-    // Select both characters
     act(() => {
       result.current.selectCharacter1(mockCharacter1);
       result.current.selectCharacter2(mockCharacter2);
     });
 
-    // Quickly clear and select again
     act(() => {
       result.current.clearCharacter1();
     });
@@ -282,7 +278,6 @@ describe('useCharacterSelection', () => {
       result.current.selectCharacter1(mockCharacter1);
     });
 
-    // Should handle the state correctly
     expect(result.current.hasBothCharacters).toBe(true);
     expect(result.current.shouldRenderEpisodes).toBe(true);
 
@@ -339,14 +334,12 @@ describe('useCharacterSelection', () => {
     it('should not scroll when alert element is not found', () => {
       const { result } = renderHook(() => useCharacterSelection());
 
-      // Mock getElementById to return null
       mockGetElementById.mockReturnValue(null);
 
       act(() => {
         result.current.selectCharacter1(mockCharacter1);
       });
 
-      // Fast forward timers
       act(() => {
         jest.advanceTimersByTime(100);
       });
@@ -366,7 +359,6 @@ describe('useCharacterSelection', () => {
         jest.advanceTimersByTime(100);
       });
 
-      // Clear mocks after first selection
       mockGetElementById.mockClear();
       mockScrollIntoView.mockClear();
 

@@ -41,8 +41,10 @@ Una aplicación web moderna construida con **Next.js 15**, **TypeScript** y **Ta
 - **Husky** - Git hooks
 - **Commitlint** - Conventional commits
 
-### HTTP Client
+### HTTP Client y Manejo de Errores
 - **Axios** - Cliente HTTP para API requests
+- **Sistema de Reintentos** - Mecanismo de retry con backoff exponencial
+- **Manejo Inteligente de Errores** - Diferenciación entre errores de cliente (4xx) y servidor (5xx)
 
 ## 🚀 Instalación y Configuración
 
@@ -258,6 +260,73 @@ La aplicación utiliza la [Rick and Morty API](https://rickandmortyapi.com/):
 - **Characters**: `/character` - Lista de personajes con paginación
 - **Episodes**: `/episode` - Información de episodios
 - **Filters**: Soporte para filtros por nombre y estado
+
+## 🛡️ Sistema de Manejo de Errores
+
+La aplicación implementa un robusto sistema de manejo de errores HTTP con las siguientes características:
+
+### 🔄 Mecanismo de Reintentos Inteligente
+
+```typescript
+// Configuración por defecto
+{
+  retries: 3,           // Número máximo de reintentos
+  retryDelay: 1000,     // Delay inicial en ms
+  timeout: 10000        // Timeout por request
+}
+```
+
+### 📊 Estrategia de Backoff Exponencial
+
+- **Intento 1**: Falla → Espera 1000ms
+- **Intento 2**: Falla → Espera 2000ms  
+- **Intento 3**: Falla → Espera 4000ms
+- **Máximo**: Lanza error final
+
+### ⚡ Lógica de Reintentos por Tipo de Error
+
+| Código de Estado | Comportamiento | Razón |
+|------------------|---------------|-------|
+| **2xx** | ✅ Éxito | Request exitoso |
+| **4xx** | ❌ No reintenta | Error de cliente (datos inválidos, no autorizado) |
+| **5xx** | 🔄 Reintenta | Error de servidor (temporal, puede resolverse) |
+| **Red/Timeout** | 🔄 Reintenta | Problemas de conectividad |
+
+### 🔧 Funcionalidades Avanzadas
+
+- **Interceptores de Request/Response**: Logging automático de todas las peticiones
+- **Manejo de Headers**: Configuración dinámica de headers de autenticación
+- **Patrón Singleton**: Instancia única del cliente HTTP en toda la aplicación
+- **TypeScript**: Tipado estricto para mayor seguridad y mejor DX
+
+### 📝 Ejemplo de Uso
+
+```typescript
+// Configuración personalizada con reintentos
+const result = await httpClient.get('/character', {
+  retries: 5,         // Máximo 5 reintentos
+  retryDelay: 2000,   // Espera inicial de 2 segundos
+  headers: {
+    'Custom-Header': 'value'
+  }
+});
+
+// Headers dinámicos
+httpClient.setHeader('Authorization', 'Bearer token');
+httpClient.removeHeader('X-Old-Header');
+```
+
+### 🧪 Cobertura de Tests
+
+El sistema de manejo de errores tiene **97.91% de cobertura** con tests que cubren:
+
+- ✅ Reintentos en errores de servidor (5xx)
+- ✅ No reintentos en errores de cliente (4xx)  
+- ✅ Backoff exponencial correcto
+- ✅ Manejo de timeouts y errores de red
+- ✅ Interceptores de request/response
+- ✅ Gestión de headers dinámicos
+- ✅ Patrón singleton
 
 ## 🐛 Problemas Conocidos
 

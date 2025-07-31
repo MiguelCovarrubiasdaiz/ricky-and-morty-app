@@ -157,7 +157,6 @@ describe('useCharacters Hook', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    // Navigate to page 2 first
     act(() => {
       result.current.goToNextPage();
     });
@@ -168,7 +167,6 @@ describe('useCharacters Hook', () => {
 
     expect(result.current.canGoPrevious).toBe(true);
 
-    // Now navigate back to page 1
     act(() => {
       result.current.goToPreviousPage();
     });
