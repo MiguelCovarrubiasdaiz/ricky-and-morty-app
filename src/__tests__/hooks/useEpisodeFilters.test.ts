@@ -9,6 +9,8 @@ const mockFilterEpisodesByCharacters =
     typeof episodeFiltersUtils.filterEpisodesByCharacters
   >;
 
+const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
 describe('useEpisodeFilters', () => {
   const mockCharacter1: Character = {
     id: 1,
@@ -74,6 +76,7 @@ describe('useEpisodeFilters', () => {
 
   beforeEach(() => {
     mockFilterEpisodesByCharacters.mockClear();
+    mockConsoleError.mockClear();
   });
 
   it('should initialize with empty filters when no characters provided', async () => {
@@ -149,10 +152,14 @@ describe('useEpisodeFilters', () => {
   it('should update when characters change', async () => {
     mockFilterEpisodesByCharacters.mockResolvedValue(mockEpisodeFilters);
 
+    interface HookProps {
+      char1: Character | null;
+      char2: Character | null;
+    }
+
     const { result, rerender } = renderHook(
-      ({ char1, char2 }: { char1: Character | null; char2: Character | null }) =>
-        useEpisodeFilters(char1, char2),
-      { initialProps: { char1: null, char2: null } }
+      ({ char1, char2 }: HookProps) => useEpisodeFilters(char1, char2),
+      { initialProps: { char1: null, char2: null } as HookProps }
     );
 
     expect(result.current.hasAnyCharacter).toBe(false);
@@ -170,10 +177,14 @@ describe('useEpisodeFilters', () => {
   it('should clear filters when characters are removed', async () => {
     mockFilterEpisodesByCharacters.mockResolvedValue(mockEpisodeFilters);
 
+    interface HookProps {
+      char1: Character | null;
+      char2: Character | null;
+    }
+
     const { result, rerender } = renderHook(
-      ({ char1, char2 }: { char1: Character | null; char2: Character | null }) =>
-        useEpisodeFilters(char1, char2),
-      { initialProps: { char1: mockCharacter1, char2: mockCharacter2 } }
+      ({ char1, char2 }: HookProps) => useEpisodeFilters(char1, char2),
+      { initialProps: { char1: mockCharacter1, char2: mockCharacter2 } as HookProps }
     );
 
     await waitFor(() => {

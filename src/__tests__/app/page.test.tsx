@@ -1,12 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
 import * as api from '@/services/api';
+import { CharacterResponse } from '@/types/api';
 
 jest.mock('../../services/api');
 const mockGetCharacters = api.getCharacters as jest.MockedFunction<typeof api.getCharacters>;
 
 describe('Home Page', () => {
-  const mockResponse = {
+  const mockResponse: CharacterResponse = {
     results: [
       {
         id: 1,

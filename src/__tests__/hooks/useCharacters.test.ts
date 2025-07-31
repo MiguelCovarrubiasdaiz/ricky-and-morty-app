@@ -1,12 +1,15 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useCharacters } from '@/hooks/useCharacters';
 import * as api from '@/services/api';
+import { CharacterResponse } from '@/types/api';
 
 jest.mock('../../services/api');
 const mockGetCharacters = api.getCharacters as jest.MockedFunction<typeof api.getCharacters>;
 
+const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
 describe('useCharacters Hook', () => {
-  const mockResponse = {
+  const mockResponse: CharacterResponse = {
     results: [
       {
         id: 1,
@@ -32,7 +35,7 @@ describe('useCharacters Hook', () => {
     },
   };
 
-  const mockPage2Response = {
+  const mockPage2Response: CharacterResponse = {
     results: [
       {
         id: 2,
@@ -59,6 +62,7 @@ describe('useCharacters Hook', () => {
 
   beforeEach(() => {
     mockGetCharacters.mockClear();
+    mockConsoleError.mockClear();
   });
 
   it('loads characters on mount', async () => {

@@ -88,7 +88,6 @@ describe('CharacterComparison', () => {
       />
     );
 
-    // Wait for the component to mount and animate
     await waitFor(
       () => {
         expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
@@ -114,7 +113,6 @@ describe('CharacterComparison', () => {
     const resetButton = screen.getByText('Reset Selection').closest('button');
     fireEvent.click(resetButton!);
 
-    // Wait for the exit animation delay
     await waitFor(
       () => {
         expect(mockOnClearSelection).toHaveBeenCalledTimes(1);
@@ -137,7 +135,6 @@ describe('CharacterComparison', () => {
       fireEvent.click(selectOtherButton!);
     });
 
-    // Wait for the exit animation delay
     await waitFor(
       () => {
         expect(mockOnClearSelection).toHaveBeenCalledTimes(1);
@@ -188,10 +185,8 @@ describe('CharacterComparison', () => {
       />
     );
 
-    // Should show validation message initially
     expect(screen.getByText('Almost there! One more character needed')).toBeInTheDocument();
 
-    // Rerender with both characters
     rerender(
       <CharacterComparison
         character1={mockCharacter1}
@@ -200,7 +195,6 @@ describe('CharacterComparison', () => {
       />
     );
 
-    // Should now show comparison view
     await waitFor(
       () => {
         expect(screen.getByText('VS')).toBeInTheDocument();

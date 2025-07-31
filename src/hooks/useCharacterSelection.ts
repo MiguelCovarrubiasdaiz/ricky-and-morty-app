@@ -7,12 +7,30 @@ export function useCharacterSelection() {
   const [showEpisodes, setShowEpisodes] = useState(false);
   const [shouldRenderEpisodes, setShouldRenderEpisodes] = useState(false);
 
+  const scrollToAlert = () => {
+    // Small delay to ensure the alert is rendered before scrolling
+    setTimeout(() => {
+      const alertElement = document.getElementById('character-alert');
+      if (alertElement) {
+        alertElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, 100);
+  };
+
   const selectCharacter1 = (character: Character) => {
     if (character2 && character2.id === character.id) {
       alert('Este personaje ya está seleccionado en Character #2');
       return;
     }
+    const wasFirstSelection = !character1 && !character2;
     setCharacter1(character);
+    // Scroll to alert if this is the first character selected
+    if (wasFirstSelection) {
+      scrollToAlert();
+    }
   };
 
   const selectCharacter2 = (character: Character) => {
@@ -20,7 +38,12 @@ export function useCharacterSelection() {
       alert('Este personaje ya está seleccionado en Character #1');
       return;
     }
+    const wasFirstSelection = !character1 && !character2;
     setCharacter2(character);
+    // Scroll to alert if this is the first character selected
+    if (wasFirstSelection) {
+      scrollToAlert();
+    }
   };
 
   const clearCharacter1 = () => {

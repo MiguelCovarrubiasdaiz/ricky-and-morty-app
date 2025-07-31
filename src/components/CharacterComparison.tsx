@@ -43,7 +43,7 @@ export default function CharacterComparison({
   if (hasOnlyOneCharacter) {
     const selectedCharacter = character1 || character2;
     return (
-      <div className="mb-8">
+      <div className="mb-8" id="character-alert">
         <div
           className={`
             transform rounded-lg border border-yellow-500 bg-yellow-900/20 p-6

@@ -8,8 +8,17 @@ const api = axios.create({
   timeout: 10000,
 });
 
-export const getCharacters = async (page: number = 1): Promise<CharacterResponse> => {
-  const response = await api.get<CharacterResponse>(`/character?page=${page}`);
+export const getCharacters = async (
+  page: number = 1,
+  name?: string,
+  status?: string
+): Promise<CharacterResponse> => {
+  const params = new URLSearchParams();
+  params.append('page', page.toString());
+  if (name) params.append('name', name);
+  if (status) params.append('status', status);
+
+  const response = await api.get<CharacterResponse>(`/character?${params.toString()}`);
   return response.data;
 };
 

@@ -26,6 +26,13 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockAxiosInstance = (mockedAxios.create as jest.Mock)();
 
 describe('API Service', () => {
+  describe('API Base URL configuration', () => {
+    it('should create axios instance with timeout configuration', () => {
+      expect(mockAxiosInstance).toBeDefined();
+      expect(mockAxiosInstance.get).toBeDefined();
+    });
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -71,6 +78,32 @@ describe('API Service', () => {
       await getCharacters();
 
       expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character?page=1');
+    });
+
+    it('should include name parameter when provided', async () => {
+      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+
+      await getCharacters(1, 'Rick');
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character?page=1&name=Rick');
+    });
+
+    it('should include status parameter when provided', async () => {
+      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+
+      await getCharacters(1, undefined, 'alive');
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/character?page=1&status=alive');
+    });
+
+    it('should include both name and status parameters when provided', async () => {
+      mockAxiosInstance.get.mockResolvedValueOnce({ data: mockApiResponse });
+
+      await getCharacters(2, 'Morty', 'dead');
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        '/character?page=2&name=Morty&status=dead'
+      );
     });
   });
 

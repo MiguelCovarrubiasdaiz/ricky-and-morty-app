@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useCustomPagination } from '@/hooks/useCustomPagination';
 import Card from './ui/Card';
 import ErrorState from './ui/ErrorState';
@@ -5,6 +6,7 @@ import Pagination from './ui/Pagination';
 import SelectedCharacterBadge from './SelectedCharacterBadge';
 import CharacterGrid from './CharacterGrid';
 import CharacterCardSkeleton from './ui/CharacterCardSkeleton';
+import CharacterFilters from './CharacterFilters';
 import { CharacterSectionProps } from '@/types/components';
 
 export default function CharacterSection({
@@ -13,6 +15,9 @@ export default function CharacterSection({
   otherSelectedCharacter,
   onCharacterSelect,
 }: CharacterSectionProps) {
+  const [searchName, setSearchName] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+
   const {
     characters,
     currentPage,
@@ -24,7 +29,7 @@ export default function CharacterSection({
     retryFetch,
     canGoNext,
     canGoPrevious,
-  } = useCustomPagination();
+  } = useCustomPagination(searchName, statusFilter);
 
   if (error) {
     return (
@@ -41,11 +46,25 @@ export default function CharacterSection({
 
       <SelectedCharacterBadge character={selectedCharacter} placeholder="None selected" />
 
+      <CharacterFilters
+        searchName={searchName}
+        statusFilter={statusFilter}
+        onSearchChange={setSearchName}
+        onStatusChange={setStatusFilter}
+      />
+
       {loading ? (
         <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
           {Array.from({ length: 6 }).map((_, index) => (
             <CharacterCardSkeleton key={index} />
           ))}
+        </div>
+      ) : characters.length === 0 ? (
+        <div className="mb-4 text-center">
+          <p className="text-gray-500">
+            No characters found{searchName && ` matching "${searchName}"`}
+            {statusFilter && ` with status "${statusFilter}"`}
+          </p>
         </div>
       ) : (
         <CharacterGrid
@@ -56,15 +75,17 @@ export default function CharacterSection({
         />
       )}
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPrevious={goToPreviousPage}
-        onNext={goToNextPage}
-        canGoPrevious={canGoPrevious}
-        canGoNext={canGoNext}
-        loading={loading}
-      />
+      {characters.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPrevious={goToPreviousPage}
+          onNext={goToNextPage}
+          canGoPrevious={canGoPrevious}
+          canGoNext={canGoNext}
+          loading={loading}
+        />
+      )}
     </Card>
   );
 }

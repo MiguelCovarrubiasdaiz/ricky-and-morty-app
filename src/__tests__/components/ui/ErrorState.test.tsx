@@ -6,7 +6,7 @@ describe('ErrorState Component', () => {
     render(<ErrorState message="Custom error message" />);
 
     expect(screen.getByText('Custom error message')).toBeInTheDocument();
-    expect(screen.getByText('Something went wrong')).toBeInTheDocument(); // default title
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
   });
 
   it('renders retry button when onRetry provided', () => {

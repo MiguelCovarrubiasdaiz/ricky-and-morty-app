@@ -5,6 +5,11 @@ import { Character } from '@/types/api';
 const mockAlert = jest.fn();
 global.alert = mockAlert;
 
+const mockScrollIntoView = jest.fn();
+Element.prototype.scrollIntoView = mockScrollIntoView;
+
+const mockGetElementById = jest.spyOn(document, 'getElementById');
+
 describe('useCharacterSelection', () => {
   const mockCharacter1: Character = {
     id: 1,
@@ -38,6 +43,14 @@ describe('useCharacterSelection', () => {
 
   beforeEach(() => {
     mockAlert.mockClear();
+    mockScrollIntoView.mockClear();
+    mockGetElementById.mockClear();
+    jest.clearAllTimers();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('should initialize with no characters selected', () => {
@@ -184,11 +197,9 @@ describe('useCharacterSelection', () => {
       result.current.selectCharacter2(mockCharacter2);
     });
 
-    // shouldRenderEpisodes should be true immediately
     expect(result.current.shouldRenderEpisodes).toBe(true);
     expect(result.current.showEpisodes).toBe(false);
 
-    // showEpisodes should be true after 100ms delay
     await waitFor(() => {
       expect(result.current.showEpisodes).toBe(true);
     });
@@ -197,7 +208,6 @@ describe('useCharacterSelection', () => {
   it('should set showEpisodes to false immediately and shouldRenderEpisodes to false after delay when characters are cleared', async () => {
     const { result } = renderHook(() => useCharacterSelection());
 
-    // First select both characters
     act(() => {
       result.current.selectCharacter1(mockCharacter1);
       result.current.selectCharacter2(mockCharacter2);
@@ -208,17 +218,14 @@ describe('useCharacterSelection', () => {
       expect(result.current.shouldRenderEpisodes).toBe(true);
     });
 
-    // Then clear them
     act(() => {
       result.current.clearAllCharacters();
     });
 
-    // showEpisodes should be false immediately
     expect(result.current.showEpisodes).toBe(false);
-    // shouldRenderEpisodes should still be true initially
+
     expect(result.current.shouldRenderEpisodes).toBe(true);
 
-    // shouldRenderEpisodes should be false after 700ms delay
     await waitFor(
       () => {
         expect(result.current.shouldRenderEpisodes).toBe(false);
@@ -281,6 +288,126 @@ describe('useCharacterSelection', () => {
 
     await waitFor(() => {
       expect(result.current.showEpisodes).toBe(true);
+    });
+  });
+
+  describe('scroll to alert functionality', () => {
+    const mockAlertElement = {
+      scrollIntoView: mockScrollIntoView,
+    };
+
+    it('should scroll to alert when selecting first character (character1)', () => {
+      const { result } = renderHook(() => useCharacterSelection());
+
+      mockGetElementById.mockReturnValue(mockAlertElement as never);
+
+      act(() => {
+        result.current.selectCharacter1(mockCharacter1);
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      expect(mockGetElementById).toHaveBeenCalledWith('character-alert');
+      expect(mockScrollIntoView).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    });
+
+    it('should scroll to alert when selecting first character (character2)', () => {
+      const { result } = renderHook(() => useCharacterSelection());
+
+      mockGetElementById.mockReturnValue(mockAlertElement as never);
+
+      act(() => {
+        result.current.selectCharacter2(mockCharacter2);
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      expect(mockGetElementById).toHaveBeenCalledWith('character-alert');
+      expect(mockScrollIntoView).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    });
+
+    it('should not scroll when alert element is not found', () => {
+      const { result } = renderHook(() => useCharacterSelection());
+
+      // Mock getElementById to return null
+      mockGetElementById.mockReturnValue(null);
+
+      act(() => {
+        result.current.selectCharacter1(mockCharacter1);
+      });
+
+      // Fast forward timers
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      expect(mockGetElementById).toHaveBeenCalledWith('character-alert');
+      expect(mockScrollIntoView).not.toHaveBeenCalled();
+    });
+
+    it('should not scroll when selecting second character', () => {
+      const { result } = renderHook(() => useCharacterSelection());
+
+      act(() => {
+        result.current.selectCharacter1(mockCharacter1);
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      // Clear mocks after first selection
+      mockGetElementById.mockClear();
+      mockScrollIntoView.mockClear();
+
+      act(() => {
+        result.current.selectCharacter2(mockCharacter2);
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      expect(mockGetElementById).not.toHaveBeenCalled();
+      expect(mockScrollIntoView).not.toHaveBeenCalled();
+    });
+
+    it('should not scroll when replacing an already selected character', () => {
+      const { result } = renderHook(() => useCharacterSelection());
+
+      act(() => {
+        result.current.selectCharacter1(mockCharacter1);
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      mockGetElementById.mockClear();
+      mockScrollIntoView.mockClear();
+
+      const mockCharacter3 = { ...mockCharacter1, id: 3, name: 'Summer Smith' };
+
+      act(() => {
+        result.current.selectCharacter1(mockCharacter3);
+      });
+
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      expect(mockGetElementById).not.toHaveBeenCalled();
+      expect(mockScrollIntoView).not.toHaveBeenCalled();
     });
   });
 });

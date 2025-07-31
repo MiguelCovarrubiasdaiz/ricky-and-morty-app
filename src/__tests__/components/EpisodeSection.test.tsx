@@ -66,7 +66,7 @@ describe('EpisodeSection', () => {
     );
 
     expect(screen.getByText('Test Episodes')).toBeInTheDocument();
-    expect(container.querySelector('.animate-spin')).toBeInTheDocument(); // LoadingSpinner
+    expect(container.querySelector('.animate-spin')).toBeInTheDocument();
     expect(screen.queryByText('2 episodes')).not.toBeInTheDocument();
   });
 
@@ -92,7 +92,7 @@ describe('EpisodeSection', () => {
 
     expect(screen.getByText('Test Episodes')).toBeInTheDocument();
     expect(screen.getByText('2 episodes')).toBeInTheDocument();
-    // The EpisodeGrid should render the episodes
+
     expect(screen.getByText('Pilot')).toBeInTheDocument();
     expect(screen.getByText('Lawnmower Dog')).toBeInTheDocument();
   });
@@ -100,7 +100,6 @@ describe('EpisodeSection', () => {
   it('uses default loading prop when not provided', () => {
     const { container } = render(<EpisodeSection title="Test Episodes" episodes={mockEpisodes} />);
 
-    // Should not show loading spinner by default
     expect(container.querySelector('.animate-spin')).not.toBeInTheDocument();
     expect(screen.getByText('2 episodes')).toBeInTheDocument();
   });
@@ -112,7 +111,7 @@ describe('EpisodeSection', () => {
   });
 
   it('handles sorted episodes from sortEpisodesByNumber', () => {
-    const sortedEpisodes = [mockEpisodes[1], mockEpisodes[0]]; // Reversed order
+    const sortedEpisodes = [mockEpisodes[1], mockEpisodes[0]];
     mockSortEpisodesByNumber.mockReturnValue(sortedEpisodes);
 
     render(<EpisodeSection title="Test Episodes" episodes={mockEpisodes} />);

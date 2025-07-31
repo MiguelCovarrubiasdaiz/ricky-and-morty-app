@@ -172,15 +172,12 @@ describe('CharacterGrid', () => {
     const mortyCard = screen.getByText('Morty Smith').closest('div[class*="cursor-not-allowed"]');
     const summerCard = screen.getByText('Summer Smith').closest('div[class*="bg-gray-800"]');
 
-    // Rick should be selected (not disabled)
     expect(rickCard).toHaveClass('selected-character');
     expect(rickCard).not.toHaveClass('cursor-not-allowed', 'opacity-50');
 
-    // Morty should be disabled (selected in other slot)
     expect(mortyCard).toHaveClass('cursor-not-allowed', 'opacity-50');
     expect(mortyCard).not.toHaveClass('selected-character');
 
-    // Summer should be normal
     expect(summerCard).not.toHaveClass('selected-character');
     expect(summerCard).not.toHaveClass('cursor-not-allowed', 'opacity-50');
   });

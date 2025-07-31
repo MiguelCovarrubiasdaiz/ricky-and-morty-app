@@ -21,7 +21,6 @@ function TestCharacterSelection() {
     selectCharacter2,
     clearCharacter1,
     clearCharacter2,
-    clearAll,
   } = useCharacterSelection();
 
   return (
@@ -32,7 +31,6 @@ function TestCharacterSelection() {
       <button onClick={() => selectCharacter2(mockCharacter2)}>Select Character 2</button>
       <button onClick={clearCharacter1}>Clear Character 1</button>
       <button onClick={clearCharacter2}>Clear Character 2</button>
-      <button onClick={clearAll}>Clear All</button>
     </div>
   );
 }

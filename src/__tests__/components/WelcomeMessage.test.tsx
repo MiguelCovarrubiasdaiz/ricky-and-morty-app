@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import WelcomeMessage from '@/components/WelcomeMessage';
 
-// Mock del scrollIntoView
 const mockScrollIntoView = jest.fn();
 Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
   configurable: true,
@@ -10,7 +9,6 @@ Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
 
 describe('WelcomeMessage Component', () => {
   beforeEach(() => {
-    // Limpiar mocks antes de cada prueba
     mockScrollIntoView.mockClear();
   });
 
@@ -42,10 +40,9 @@ describe('WelcomeMessage Component', () => {
   });
 
   it('calls scrollIntoView when button is clicked', () => {
-    // Mock del getElementById para devolver un elemento
     const mockElement = document.createElement('div');
     mockElement.id = 'characters-section';
-    jest.spyOn(document, 'getElementById').mockReturnValue(mockElement);
+    const mockGetElementById = jest.spyOn(document, 'getElementById').mockReturnValue(mockElement);
 
     render(<WelcomeMessage />);
 
@@ -58,30 +55,25 @@ describe('WelcomeMessage Component', () => {
       block: 'start',
     });
 
-    // Limpiar el mock
-    document.getElementById.mockRestore();
+    mockGetElementById.mockRestore();
   });
 
   it('handles click when element is not found', () => {
-    // Mock getElementById para devolver null
-    jest.spyOn(document, 'getElementById').mockReturnValue(null);
+    const mockGetElementById = jest.spyOn(document, 'getElementById').mockReturnValue(null);
 
     render(<WelcomeMessage />);
 
     const selectButton = screen.getByRole('button', { name: /select characters/i });
 
-    // No debería lanzar error cuando el elemento no existe
     expect(() => fireEvent.click(selectButton)).not.toThrow();
     expect(mockScrollIntoView).not.toHaveBeenCalled();
 
-    // Limpiar el mock
-    document.getElementById.mockRestore();
+    mockGetElementById.mockRestore();
   });
 
   it('renders check circle icon', () => {
     render(<WelcomeMessage />);
 
-    // Verificar que el icono está presente (por clase CSS o data-testid si lo agregas)
     const iconContainer = screen.getByText('Welcome to the Multiverse!').previousElementSibling;
     expect(iconContainer).toBeInTheDocument();
   });
